@@ -46,7 +46,7 @@ const ProtectedRoute = ({ children }) => {
 
       <div className="flex flex-1">
         {/* Sidebar visible only on lg */}
-        <div className="hidden lg:flex lg:flex-shrink-0">
+        <div className="hidden lg:flex lg:shrink-0">
           <Sidebar />
         </div>
 
@@ -144,7 +144,7 @@ const AppRoutes = () => {
         }
       />
 
-        <Route
+      <Route
         path="/counsellorfinal"
         element={
           <ProtectedRoute>
@@ -176,7 +176,7 @@ const App = () => (
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            theme="light"
+            theme="colored"
           />
           <BrowserRouter>
             <AppRoutes />
