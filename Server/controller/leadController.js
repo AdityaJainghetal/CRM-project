@@ -229,7 +229,7 @@ exports.getAllLeads = async (req, res) => {
   try {
     const {
       page = 1,
-      limit = 10,
+      limit = 50,
       search = "",
       status,
       leadTag,
@@ -238,7 +238,7 @@ exports.getAllLeads = async (req, res) => {
 
     const filter = {};
 
-    // Search by name or phone
+    // Search by name, phone or email
     if (search) {
       filter.$or = [
         { name: { $regex: search, $options: "i" } },
@@ -259,7 +259,9 @@ exports.getAllLeads = async (req, res) => {
         .skip(skip)
         .limit(Number(limit))
         .populate("assignedToTelecaller", "name email")
-        .populate("assignedToCounsellor", "name email"),
+        .populate("assignedToCounsellor", "name email")
+        .lean(),                    // Important: Returns plain JavaScript objects with full data
+
       Lead.countDocuments(filter),
     ]);
 
@@ -279,6 +281,60 @@ exports.getAllLeads = async (req, res) => {
     });
   }
 };
+// exports.getAllLeads = async (req, res) => {
+//   try {
+//     const {
+//       page = 1,
+//       limit = 10,
+//       search = "",
+//       status,
+//       leadTag,
+//       city,
+//     } = req.query;
+
+//     const filter = {};
+
+//     // Search by name or phone
+//     if (search) {
+//       filter.$or = [
+//         { name: { $regex: search, $options: "i" } },
+//         { phone: { $regex: search, $options: "i" } },
+//         { email: { $regex: search, $options: "i" } },
+//       ];
+//     }
+
+//     if (status) filter.status = status;
+//     if (leadTag) filter.leadTag = leadTag;
+//     if (city) filter.city = { $regex: city, $options: "i" };
+
+//     const skip = (Number(page) - 1) * Number(limit);
+
+//     const [leads, total] = await Promise.all([
+//       Lead.find(filter)
+//         .sort({ createdAt: -1 })
+//         .skip(skip)
+//         .limit(Number(limit))
+//         .populate("assignedToTelecaller", "name email")
+//         .populate("assignedToCounsellor", "name email"),
+//       Lead.countDocuments(filter),
+//     ]);
+
+//     return res.status(200).json({
+//       success: true,
+//       total,
+//       page: Number(page),
+//       totalPages: Math.ceil(total / Number(limit)),
+//       data: leads,
+//     });
+//   } catch (error) {
+//     console.error("Get All Leads Error:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Error fetching leads.",
+//       error: error.message,
+//     });
+//   }
+// };
 
 // ====================== Get Single Lead ======================
 exports.getLeadById = async (req, res) => {
