@@ -1,4 +1,62 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
+
+// const leadSchema = new mongoose.Schema({
+//   name: { type: String, required: true },
+//   phone: { type: String, required: true, unique: true },
+//   parentName: String,
+//   city: String,
+//   email: String,
+//   neetStatus: String,
+//   budget: Number,
+//   preferredCountry: String,
+
+//   assignedToTelecaller: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
+//   assignedToCounsellor: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
+
+//   status: { 
+//     type: String, 
+//     enum: ['New', 'Not Interested', 'Call Back', 'Interested', 'Converted', 'Dropped'],
+//     default: 'New' 
+//   },
+
+//   leadTag: { 
+//     type: String, 
+//     enum: ['Hot', 'Warm', 'Cold'],
+//     default: 'null' 
+//   },
+
+//   remarks: [{
+//     text: String,
+//     by: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
+//     date: { type: Date, default: Date.now }
+//   }],
+
+//   followUpDate: Date,
+//   registrationFeePaid: { type: Boolean, default: false },
+//   documentsSubmitted: { type: Boolean, default: false },
+//   admissionLetterIssued: { type: Boolean, default: false },
+//   visaApplied: { type: Boolean, default: false },
+//   visaIssued: { type: Boolean, default: false },
+//   ticketBooked: { type: Boolean, default: false },
+//   departureDate: Date,
+//   departureStatus: { type: Boolean, default: false },
+
+//   collegeName: String,
+//   emergencyContact: String,
+//   serviceManager: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
+
+//   createdAt: { type: Date, default: Date.now },
+//   updatedAt: { type: Date, default: Date.now }
+// });
+
+// leadSchema.pre('save', function (next) {
+//   this.updatedAt = Date.now();
+//   next();
+// });
+
+// module.exports = mongoose.model('Lead', leadSchema);
+
+const mongoose = require("mongoose");
 
 const leadSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -10,26 +68,28 @@ const leadSchema = new mongoose.Schema({
   budget: Number,
   preferredCountry: String,
 
-  assignedToTelecaller: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
-  assignedToCounsellor: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
+  assignedToTelecaller: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+  assignedToCounsellor: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
 
-  status: { 
-    type: String, 
-    enum: ['New', 'Not Interested', 'Call Back', 'Interested', 'Converted', 'Dropped'],
-    default: 'New' 
+  status: {
+    type: String,
+    enum: ["New", "Not Interested", "Call Back", "Interested", "Converted", "Dropped"],
+    default: "New",
   },
 
-  leadTag: { 
-    type: String, 
-    enum: ['Hot', 'Warm', 'Cold'],
-    default: 'null' 
+  leadTag: {
+    type: String,
+    enum: ["Hot", "Warm", "Cold"],
+    default: "Warm",
   },
 
-  remarks: [{
-    text: String,
-    by: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
-    date: { type: Date, default: Date.now }
-  }],
+  remarks: [
+    {
+      text: String,
+      by: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+      date: { type: Date, default: Date.now },
+    },
+  ],
 
   followUpDate: Date,
   registrationFeePaid: { type: Boolean, default: false },
@@ -43,15 +103,15 @@ const leadSchema = new mongoose.Schema({
 
   collegeName: String,
   emergencyContact: String,
-  serviceManager: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
+  serviceManager: String, // Stored as name string from Excel (not ObjectId)
 
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: Date.now },
 });
 
-leadSchema.pre('save', function (next) {
+leadSchema.pre("save", function (next) {
   this.updatedAt = Date.now();
   next();
 });
 
-module.exports = mongoose.model('Lead', leadSchema);
+module.exports = mongoose.model("Lead", leadSchema);
