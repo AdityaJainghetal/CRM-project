@@ -364,9 +364,7 @@ const Profile = () => {
             <TabsTrigger value="security" className="cursor-pointer">
               Security
             </TabsTrigger>
-            <TabsTrigger value="documents" className="cursor-pointer">
-              Documents
-            </TabsTrigger>
+          
           </TabsList>
 
           {/* Personal Information */}
@@ -508,22 +506,7 @@ const Profile = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="skills">Skills</Label>
-                  <Textarea
-                    id="skills"
-                    placeholder="List your skills (comma separated)"
-                    value={profileData.skills}
-                    onChange={(e) =>
-                      setProfileData({ ...profileData, skills: e.target.value })
-                    }
-                    disabled={!isEditing}
-                    rows={2}
-                    className={
-                      isEditing ? "resize-none" : "resize-none bg-muted"
-                    }
-                  />
-                </div>
+            
 
                 <Separator />
 
@@ -643,93 +626,7 @@ const Profile = () => {
             </Card>
           </TabsContent>
 
-          {/* Documents */}
-          <TabsContent value="documents" className="space-y-6">
-            <Card className="dashboard-card">
-              <CardHeader>
-                <CardTitle>Resume & Documents</CardTitle>
-                <CardDescription>
-                  Manage your resume and other important documents
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
-                  <Upload className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Upload Resume</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Upload your latest resume (PDF format)
-                  </p>
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleResumeUpload}
-                    className="hidden"
-                    id="resume-upload"
-                    ref={resumeInputRef}
-                  />
-                  <Button
-                    className="btn-gradient"
-                    onClick={() => resumeInputRef.current?.click()}
-                  >
-                    <Upload className="w-4 h-4 mr-2" />
-                    Choose File
-                  </Button>
-                  {resumeFile && (
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Selected: {resumeFile.name}
-                    </p>
-                  )}
-                </div>
-
-                {/* Current Documents */}
-                <div className="space-y-4">
-                  <h4 className="font-semibold">Current Documents</h4>
-                  <div className="space-y-3">
-                    {resumeFile ? (
-                      <div className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                            <span className="text-red-600 font-semibold text-xs">
-                              PDF
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-medium">{resumeFile.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              Uploaded on{" "}
-                              {new Date(
-                                resumeFile.uploadDate
-                              ).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleViewResume}
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleDownloadResume}
-                          >
-                            <Download className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-muted-foreground text-center py-4">
-                        No resume uploaded yet
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+      
         </Tabs>
       </div>
     </div>

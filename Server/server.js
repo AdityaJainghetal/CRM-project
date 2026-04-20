@@ -11,6 +11,7 @@ const fileUpload = require("express-fileupload");
 const authRoutes = require("./routes/auth.js");
 const employeeRoutes = require("./routes/employee.js");
 const departmentRoutes = require("./routes/department.js");
+const leadRoutes = require("./routes/leadRoutes.js");
 
 dns.setServers(["8.8.8.8", "1.1.1.1", "0.0.0.0"]);
 
@@ -50,6 +51,8 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api/employees", employeeRoutes);
+app.use("/api/leads", leadRoutes);
+
 
 
 

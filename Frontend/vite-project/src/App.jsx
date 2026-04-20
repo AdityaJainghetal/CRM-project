@@ -16,6 +16,11 @@ import NotFound from "./components/NotFound";
 import "react-toastify/dist/ReactToastify.css";
 import { Sidebar } from "./components/layout/Sidebar";
 import Employees from "./pages/Employees";
+import AddStudent from "./pages/Admin/AddStudent";
+import CounselorDashboard from "./pages/Counsellor/CounselorDashboard";
+import TelecallerDashboard from "./pages/TelecallerDashboard/TelecallerDashboard";
+import CounsellorAndTelecaller from "./pages/CounsellorAndTelecaller";
+import Counsellorfinal from "./pages/TelecallerDashboard/Counsellorfinal";
 
 const queryClient = new QueryClient();
 
@@ -77,7 +82,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-       <Route
+      <Route
         path="/employees"
         element={
           <ProtectedRoute>
@@ -86,7 +91,7 @@ const AppRoutes = () => {
         }
       />
 
-         <Route
+      <Route
         path="/profile"
         element={
           <ProtectedRoute>
@@ -99,6 +104,51 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Settings />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/addstudent"
+        element={
+          <ProtectedRoute>
+            <AddStudent />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/counsuller"
+        element={
+          <ProtectedRoute>
+            <CounselorDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/tellculler"
+        element={
+          <ProtectedRoute>
+            <TelecallerDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/counsellortellculler"
+        element={
+          <ProtectedRoute>
+            <CounsellorAndTelecaller />
+          </ProtectedRoute>
+        }
+      />
+
+        <Route
+        path="/counsellorfinal"
+        element={
+          <ProtectedRoute>
+            <Counsellorfinal />
           </ProtectedRoute>
         }
       />

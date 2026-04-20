@@ -22,7 +22,7 @@ const leadSchema = new mongoose.Schema({
   leadTag: { 
     type: String, 
     enum: ['Hot', 'Warm', 'Cold'],
-    default: 'Cold' 
+    default: 'null' 
   },
 
   remarks: [{

@@ -297,7 +297,6 @@
 //   );
 // };
 
-
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
@@ -361,7 +360,10 @@ export const Sidebar = () => {
     }
 
     // If department is a non-ObjectId string
-    if (typeof department === "string" && !/^[0-9a-fA-F]{24}$/.test(department)) {
+    if (
+      typeof department === "string" &&
+      !/^[0-9a-fA-F]{24}$/.test(department)
+    ) {
       setDeptName(department);
       return;
     }
@@ -370,9 +372,12 @@ export const Sidebar = () => {
     if (typeof department === "string") {
       const fetchDepartment = async () => {
         try {
-          const res = await axios.get(`${API_BASE}/api/departments/${department}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const res = await axios.get(
+            `${API_BASE}/api/departments/${department}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
           if (mounted) {
             setDeptName(res.data?.data?.name || res.data?.name || "");
           }
@@ -420,12 +425,24 @@ export const Sidebar = () => {
         { label: "Dashboard", href: "/dashboard", icon: Building2 },
         { label: "Employees", href: "/employees", icon: Users },
         { label: "My Profile", href: "/profile", icon: User },
+        { label: "Settings", href: "/settings", icon: Settings },
+        { label: "Add Student", href: "/addstudent", icon: UserCheck },
+        { label: "Telecaller Dashboard", href: "/tellculler", icon: UserCheck },
+        { label: "Counselor Dashboard", href: "/counsuller", icon: UserCheck },
+        { label: "Counselor & Telecaller", href: "/counsellortellculler", icon: UserCheck },
       ]
     : [
         { label: "Dashboard", href: "/dashboard", icon: Building2 },
         { label: "My Profile", href: "/profile", icon: User },
-          { label: "Employees", href: "/employees", icon: Users },
-        
+        { label: "Employees", href: "/employees", icon: Users },
+        { label: "Settings", href: "/settings", icon: Settings },
+        { label: "Add Student", href: "/addstudent", icon: UserCheck },
+        { label: "Telecaller Dashboard", href: "/tellculler", icon: UserCheck },
+        { label: "Counselor Dashboard", href: "/counsuller", icon: UserCheck },
+           { label: "Counselor & Telecaller", href: "/counsellortellculler", icon: UserCheck },
+           { label: "Final", href: "/counsellofinal", icon: UserCheck },
+
+
       ];
 
   const isActiveLink = (href: string) => location.pathname === href;
@@ -590,7 +607,9 @@ export const Sidebar = () => {
               isCollapsed ? "rotate-180" : ""
             }`}
           />
-          {!isCollapsed && <span className="ml-3 text-sm">Collapse Sidebar</span>}
+          {!isCollapsed && (
+            <span className="ml-3 text-sm">Collapse Sidebar</span>
+          )}
         </Button>
       </div>
     </aside>

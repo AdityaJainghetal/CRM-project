@@ -88,15 +88,7 @@ const EmployeeSchema = new mongoose.Schema(
     emergencyPhone: {
       type: String,
     },
-    resume: {
-      name: String,
-      type: String,
-      url: String,
-      uploadDate: {
-        type: Date,
-        default: Date.now,
-      },
-    },
+
 
     // Education & Certifications
     education: [
@@ -107,14 +99,7 @@ const EmployeeSchema = new mongoose.Schema(
         graduationYear: Number,
       },
     ],
-    certifications: [
-      {
-        name: String,
-        issuingOrganization: String,
-        issueDate: Date,
-        expirationDate: Date,
-      },
-    ],
+  
 
     // Documents
     documents: [
