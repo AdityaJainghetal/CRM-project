@@ -1,325 +1,250 @@
+// import React, { useState } from "react";
+// import axios from "axios";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+// import { useAuth } from "../../contexts/AuthContext";
 
+// const BASE_URL = "http://localhost:8000/api";
 
-import React, { useState, useCallback } from "react";
-import * as XLSX from "xlsx";
-import { Button } from "../../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import { Badge } from "../../components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
-import { Upload, FileSpreadsheet, Users, Trash2, Loader2, AlertCircle } from "lucide-react";
-import { toast } from "react-toastify";
+// const AddStudent = () => {
+//   const { user } = useAuth();
+//   const isAdmin = user?.role === "admin";
+
+//   const [file, setFile] = useState(null);
+//   const [uploading, setUploading] = useState(false);
+//   const [uploadResult, setUploadResult] = useState(null);
+
+//   const getAuthConfig = () => {
+//     const token = localStorage.getItem("authToken");
+//     if (!token) {
+//       toast.error("Session expired. Please login again.");
+//       return null;
+//     }
+//     return { headers: { Authorization: `Bearer ${token}` } };
+//   };
+
+//   const handleFileChange = (e) => {
+//     const selectedFile = e.target.files[0];
+//     setFile(selectedFile || null);
+//     setUploadResult(null);
+//   };
+
+//   const handleUpload = async () => {
+//     if (!file) {
+//       return toast.error("Please select an Excel or CSV file first.");
+//     }
+
+//     const config = getAuthConfig();
+//     if (!config) return;
+
+//     setUploading(true);
+//     setUploadResult(null);
+
+//     const formData = new FormData();
+//     formData.append("file", file);
+
+//     try {
+//       const res = await axios.post(
+//         `${BASE_URL}/leads/bulk-upload`,
+//         formData,
+//         config, // Do NOT add extra Content-Type header
+//       );
+
+//       const { message, imported = 0, totalRows = 0, skipped = 0 } = res.data;
+
+//       setUploadResult({ success: true, message, imported, totalRows, skipped });
+//       toast.success(message);
+
+//       setFile(null);
+//       document.getElementById("student-file-input").value = "";
+//     } catch (err) {
+//       const msg = err.response?.data?.message || err.message || "Upload failed";
+//       setUploadResult({ success: false, message: msg });
+//       toast.error(msg);
+//       console.error("Full error:", err);
+//     } finally {
+//       setUploading(false);
+//     }
+//   };
+
+//   return (
+//     <div
+//       style={{
+//         padding: "24px",
+//         fontFamily: "Arial, sans-serif",
+//         maxWidth: "900px",
+//         margin: "0 auto",
+//       }}
+//     >
+//       <h1>Bulk Upload Students / Leads</h1>
+
+//       <div
+//         style={{
+//           padding: "25px",
+//           border: "1px solid #ddd",
+//           borderRadius: "10px",
+//           backgroundColor: "#fff",
+//           boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+//           marginBottom: "25px",
+//         }}
+//       >
+//         <h2>Upload Excel / CSV File</h2>
+//         <p style={{ color: "#555", marginBottom: "20px" }}>
+//           Supported formats: <strong>.xlsx, .xls, .csv</strong>
+//           <br />
+//           Make sure your file has columns like: Name, Phone Number, Parent's
+//           Name, City, Email, etc.
+//         </p>
+
+//         <input
+//           id="student-file-input"
+//           type="file"
+//           accept=".csv,.xlsx,.xls"
+//           onChange={handleFileChange}
+//           style={{ marginBottom: "20px", display: "block" }}
+//         />
+
+//         <button
+//           onClick={handleUpload}
+//           disabled={uploading || !file}
+//           style={{
+//             padding: "12px 28px",
+//             backgroundColor: uploading || !file ? "#ccc" : "#007bff",
+//             color: "white",
+//             border: "none",
+//             borderRadius: "6px",
+//             cursor: uploading || !file ? "not-allowed" : "pointer",
+//             fontSize: "16px",
+//           }}
+//         >
+//           {uploading ? "Uploading..." : "Upload Student Data"}
+//         </button>
+
+//         {uploadResult && (
+//           <div
+//             style={{
+//               marginTop: "20px",
+//               padding: "15px",
+//               borderRadius: "6px",
+//               backgroundColor: uploadResult.success ? "#d4edda" : "#f8d7da",
+//               color: uploadResult.success ? "#155724" : "#721c24",
+//             }}
+//           >
+//             <strong>{uploadResult.message}</strong>
+//             {uploadResult.success && (
+//               <div style={{ marginTop: "10px" }}>
+//                 <p>
+//                   Total Rows: <strong>{uploadResult.totalRows}</strong>
+//                 </p>
+//                 <p>
+//                   Successfully Imported:{" "}
+//                   <strong>{uploadResult.imported}</strong>
+//                 </p>
+//                 {uploadResult.skipped > 0 && (
+//                   <p>
+//                     Skipped (duplicates/invalid):{" "}
+//                     <strong>{uploadResult.skipped}</strong>
+//                   </p>
+//                 )}
+//               </div>
+//             )}
+//           </div>
+//         )}
+//       </div>
+
+//       {/* Sample Format Info */}
+//       <div
+//         style={{
+//           padding: "20px",
+//           backgroundColor: "#f8f9fa",
+//           borderRadius: "8px",
+//         }}
+//       >
+//         <h3>Expected Columns (Your file format is perfect)</h3>
+//         <p>
+//           <strong>
+//             Name, Phone Number, Parent's Name, City, Email, NEET Status, Budget,
+//             Preferred Country
+//           </strong>
+//         </p>
+//         <p style={{ color: "#28a745", fontWeight: "bold" }}>
+//           Your current Excel file matches the expected format. Just upload it
+//           directly.
+//         </p>
+//       </div>
+
+//       <ToastContainer position="top-right" autoClose={6000} />
+//     </div>
+//   );
+// };
+
+// export default AddStudent;
+
+import React, { useState } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const BASE_URL = "http://localhost:8000/api";
 
 const AddStudent = () => {
   const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState("");
-  const [students, setStudents] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [dragging, setDragging] = useState(false);
-
-  // Flexible column name mapping for your Excel
-  const normalizeKey = (key) => {
-    const k = key.toString().toLowerCase().trim();
-    if (k.includes("name") && !k.includes("parent")) return "name";
-    if (k.includes("phone") || k.includes("mobile") || k.includes("number")) return "phone";
-    if (k.includes("parent") || k.includes("father") || k.includes("mother")) return "parentName";
-    if (k.includes("city") || k.includes("location")) return "city";
-    if (k.includes("email")) return "email";
-    if (k.includes("neet")) return "neetStatus";
-    if (k.includes("budget")) return "budget";
-    if (k.includes("country") || k.includes("prefer")) return "preferredCountry";
-    return k;
-  };
-
-  const processFile = (selectedFile) => {
-    if (!selectedFile) return;
-
-    setLoading(true);
-    setFile(selectedFile);
-    setFileName(selectedFile.name);
-    setStudents([]);
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-        const processedStudents = jsonData.map((row) => {
-          const student = {};
-          Object.keys(row).forEach((key) => {
-            const normalized = normalizeKey(key);
-            student[normalized] = row[key];
-          });
-
-          return {
-            name: student.name || "",
-            phone: student.phone || "",
-            parentName: student.parentName || "",
-            city: student.city || "",
-            email: student.email || "",
-            neetStatus: student.neetStatus || "",
-            budget: student.budget || "",
-            preferredCountry: student.preferredCountry || "",
-          };
-        });
-
-        // Filter out completely empty rows
-        const validStudents = processedStudents.filter(s => s.name || s.phone);
-
-        setStudents(validStudents);
-        
-        if (validStudents.length > 0) {
-          toast.success(`${validStudents.length} students loaded successfully from your Excel!`);
-        } else {
-          toast.warning("No valid student data found in the file.");
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to parse Excel file. Please check the format.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    reader.readAsArrayBuffer(selectedFile);
-  };
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      processFile(selectedFile);
-    }
+    setFile(e.target.files[0]);
   };
 
-  const handleDrop = useCallback((e) => {
-    e.preventDefault();
-    setDragging(false);
-    const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile && /\.(xlsx|xls|csv)$/i.test(droppedFile.name)) {
-      processFile(droppedFile);
-    } else {
-      toast.error("Please upload a valid Excel or CSV file (.xlsx, .xls, .csv)");
+  const handleUpload = async () => {
+    if (!file) {
+      return toast.error("Please select a file first");
     }
-  }, []);
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setDragging(true);
-  };
-
-  const handleDragLeave = () => setDragging(false);
-
-  const clearData = () => {
-    setFile(null);
-    setFileName("");
-    setStudents([]);
-    toast.info("Data cleared successfully");
-  };
-
-  // ==================== BACKEND SAVE FUNCTION ====================
-  const addAllStudents = async () => {
-    if (!file || students.length === 0) {
-      toast.error("No students to add");
-      return;
-    }
-
-    setUploading(true);
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", file); // 👈 MUST match backend
 
     try {
-      const response = await fetch("http://localhost:8000/api/leads/bulk-upload", {
-        method: "POST",
-        body: formData,
-      });
+      setUploading(true);
 
-      const result = await response.json();
+      const res = await axios.post(
+        `${BASE_URL}/leads/bulk-upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
 
-      if (response.ok && result.success) {
-        toast.success(result.message);
-        
-      } else {
-        toast.error(result.message || "Failed to save students to database");
-      }
-    } catch (error) {
-      console.error("Upload error:", error);
-      toast.error("Network error! Please check your connection and try again.");
+      toast.success(res.data.message);
+      setFile(null);
+      document.getElementById("fileInput").value = "";
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.message || "Upload failed");
     } finally {
       setUploading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-background p-6 space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight">Add Students</h1>
-          <p className="text-muted-foreground mt-2 text-lg">
-            Upload Excel sheet to bulk import students into database
-          </p>
-        </div>
+    <div style={{ padding: 20 }}>
+      <h2>Bulk Upload</h2>
 
-        {students.length > 0 && (
-          <div className="flex gap-3">
-            <Button 
-              onClick={addAllStudents} 
-              size="lg" 
-              disabled={uploading}
-            >
-              {uploading ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Saving to Database...
-                </>
-              ) : (
-                <>
-                  <Users className="w-5 h-5 mr-2" />
-                  Save All Students ({students.length})
-                </>
-              )}
-            </Button>
+      <input
+        id="fileInput"
+        type="file"
+        accept=".csv,.xlsx,.xls"
+        onChange={handleFileChange}
+      />
 
-            <Button variant="outline" onClick={clearData} size="lg" disabled={uploading}>
-              <Trash2 className="w-4 h-4 mr-2" />
-              Clear
-            </Button>
-          </div>
-        )}
-      </div>
+      <br /><br />
 
-      {/* Upload Area */}
-      <Card>
-        <CardContent className="p-10">
-          <div
-            className={`border-2 border-dashed rounded-xl p-12 text-center transition-all duration-300 ${
-              dragging
-                ? "border-primary bg-primary/5"
-                : "border-border hover:border-primary/50"
-            }`}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-          >
-            <div className="mx-auto w-20 h-20 bg-muted rounded-2xl flex items-center justify-center mb-6">
-              <FileSpreadsheet className="w-10 h-10 text-muted-foreground" />
-            </div>
-            <h3 className="text-2xl font-semibold mb-2">Upload Excel or CSV File</h3>
-            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              Drag and drop your file here or click to browse.<br />
-              Supported formats: <strong>.xlsx, .xls, .csv</strong>
-            </p>
+      <button onClick={handleUpload} disabled={uploading}>
+        {uploading ? "Uploading..." : "Upload"}
+      </button>
 
-            <Label htmlFor="file-upload" className="cursor-pointer">
-              <Button asChild size="lg">
-                <span>
-                  <Upload className="w-5 h-5 mr-2" />
-                  Choose Excel File
-                </span>
-              </Button>
-            </Label>
-
-            <Input
-              id="file-upload"
-              type="file"
-              accept=".xlsx,.xls,.csv"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-
-            {fileName && (
-              <p className="mt-6 text-sm text-muted-foreground">
-                Selected File: <span className="font-medium text-foreground">{fileName}</span>
-              </p>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Preview Table */}
-      {students.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Preview — {students.length} Students Ready to Save
-              <Badge variant="secondary">{fileName}</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Phone Number</TableHead>
-                    <TableHead>Parent's Name</TableHead>
-                    <TableHead>City</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>NEET Status</TableHead>
-                    <TableHead>Budget</TableHead>
-                    <TableHead>Preferred Country</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {students.map((student, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">
-                        {student.name || "—"}
-                      </TableCell>
-                      <TableCell className="font-mono">
-                        {student.phone || "—"}
-                      </TableCell>
-                      <TableCell>{student.parentName || "—"}</TableCell>
-                      <TableCell>{student.city || "—"}</TableCell>
-                      <TableCell>{student.email || "—"}</TableCell>
-                      <TableCell>
-                        <Badge variant={student.neetStatus ? "default" : "secondary"}>
-                          {student.neetStatus || "Not Specified"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {student.budget ? `₹${student.budget}` : "—"}
-                      </TableCell>
-                      <TableCell>{student.preferredCountry || "—"}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Empty State */}
-      {students.length === 0 && !loading && (
-        <Card className="py-20">
-          <CardContent className="flex flex-col items-center justify-center text-center">
-            <FileSpreadsheet className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-muted-foreground text-lg">
-              Upload your Excel file to see student preview here
-            </p>
-            <p className="text-sm text-muted-foreground mt-2">
-              Your file should have columns: Name, Phone Number, Parent's Name, etc.
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Loading State */}
-      {loading && (
-        <Card className="py-12">
-          <CardContent className="flex flex-col items-center justify-center">
-            <Loader2 className="w-10 h-10 animate-spin text-primary mb-4" />
-            <p className="text-lg">Processing your Excel file...</p>
-          </CardContent>
-        </Card>
-      )}
+      <ToastContainer />
     </div>
   );
 };

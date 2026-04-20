@@ -1,16 +1,63 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const multer = require('multer');
-const Lead = require('../models/lead/LeadModel'); // your leadSchema model
-const { bulkUploadLeads } = require('../controller/leadController');
+const multer = require("multer");
 
-// Multer setup (memory storage is best for Excel)
-const storage = multer.memoryStorage();
-const upload = multer({ 
-  storage,
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
-});
+// Middlewares
+const authorize = require("../middlewares/authorize");
 
-router.post('/bulk-upload', upload.single('file'), bulkUploadLeads);
+// Controllers
+const {
+  bulkUploadLeads,
+  uploadAttendance,
+  getAttendanceByDatequery,
+  getAttendanceByName,
+} = require("../controller/leadController");
+
+// Multer for leads (memory storage)
+const leadUpload = multer({ storage: multer.memoryStorage() });
+
+// Multer for attendance (disk storage)
+const upload = require("../middlewares/multer");
+
+// ===================== LEAD ROUTES =====================
+
+/**
+ * Bulk Upload Leads (Excel/CSV)
+ * Only Admin can upload leads
+ */
+router.post("/bulk-upload", leadUpload.single("file"), bulkUploadLeads);
+
+// ===================== ATTENDANCE ROUTES =====================
+
+/**
+ * Upload Attendance (Excel/CSV)
+ * Only Admin can upload attendance
+ */
+router.post(
+  "/upload-attendance",
+  upload.single("file"),
+
+  uploadAttendance,
+);
+
+/**
+ * Get Attendance by Date Range (with optional employee filter)
+ * Only Admin can access
+ */
+router.get(
+  "/attendance/datefilter",
+
+  getAttendanceByDatequery,
+);
+
+/**
+ * Get Attendance by Employee Name
+ * Accessible by Employee and HR
+ */
+router.get(
+  "/attendance/employee/:name",
+
+  getAttendanceByName,
+);
 
 module.exports = router;
